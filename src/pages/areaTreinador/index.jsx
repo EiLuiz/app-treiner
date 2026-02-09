@@ -37,7 +37,7 @@ const AreaTreinador = () => {
         <View style= {{alignItems:"center", justifyContent:'Center', margin:20}}>
         <Text style= {[styles.texto, {fontSize: fontSizeLogin }]}>Alunos</Text>
         </View>
-        <ScrollView showsVerticalScrollIndicator='false' >
+        <ScrollView showsVerticalScrollIndicator={false} >
         
         
         <ClientCard

@@ -1,4 +1,4 @@
-import { Text, View, TextInput, Image, useWindowDimensions, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Platform, FlatList } from "react-native";
+import { Text, View, TextInput, Image, useWindowDimensions, TouchableOpacity, Alert, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform, FlatList } from "react-native";
 import Logo from '../../assets/Logo.png';
 import { useState } from "react";
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import MyInput from "../../components/MyInput";
 import { useResponsive } from "../../hooks/useResponsive";
 import Header from "../../components/Header";
 import MyButton from "../../components/MyButton";
+import { supabase } from '../../services/supabase';
 
 
 const Registro = () =>{
@@ -18,7 +19,7 @@ const Registro = () =>{
     const [senha, setSenha] = useState('');
     const [senhaAgain, setSenhaAgain] = useState('');
     const navigation = useNavigation();
-
+    const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [funcao, setFuncao] = useState(null);
     const [items, setItems] = useState([
@@ -43,12 +44,68 @@ const Registro = () =>{
         }
     };
     const handleProximo = () => {
-        if (nome === '' || email === '') {
+        if (nome === '' || email === ''|| cpf === '') {
             Alert.alert("Atenção", "Preencha os campos antes de continuar.");
             return;
         }
         setEtapa(2);
     };
+    const handleConcluirRegistro = async () => {
+        // 1. Validações básicas
+        if (senha === '' || senhaAgain === '' || !funcao) {
+            Alert.alert("Erro", "Preencha a senha e escolha uma função.");
+            return;
+        }
+
+        if (senha !== senhaAgain) {
+            Alert.alert("Erro", "As senhas não coincidem.");
+            return;
+        }
+
+        if (senha.length < 6) {
+            Alert.alert("Erro", "A senha deve ter pelo menos 6 caracteres.");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            // 2. Criar Usuário na Autenticação do Supabase
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: email,
+                password: senha,
+            });
+
+            if (authError) throw authError;
+
+            // 3. Salvar dados extras na tabela 'profiles'
+            // O ID deve ser o mesmo criado na autenticação (authData.user.id)
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .insert([
+                    { 
+                        id: authData.user.id,
+                        nome: nome,
+                        cpf: cpf,
+                        funcao: funcao
+                    }
+                ]);
+
+            if (profileError) {
+                // Se der erro ao salvar perfil, seria bom deletar o user do Auth ou tratar manualmente
+                throw new Error("Erro ao salvar perfil do usuário: " + profileError.message);
+            }
+
+            Alert.alert("Sucesso", "Conta criada com sucesso!", [
+                { text: "OK", onPress: () => navigation.navigate('TreinerHome') }
+            ]);
+
+        } catch (error) {
+            Alert.alert("Erro no Registro", error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
         
         <View style = {styles.container}>
@@ -105,7 +162,8 @@ const Registro = () =>{
                             placeholder="Insira seu email..."
                             fontSize={fontSizeForm}
                             height={heightInput}
-                            keyboardType="email-address" // Teclado de email
+                            keyboardType="email-address"
+                            autoCapitalize="none" 
                         />
                             </>
                         )}
@@ -167,12 +225,18 @@ const Registro = () =>{
                         
 
                     </View>
-                    <MyButton
-                        label={etapa===1 ? "Próximo":"Concluir Registro"}
-                        fontSize={fontSizeForm}
-                        height={heightInput}
-                        onPress={etapa===1 ? handleProximo : () => navigation.navigate('TreinerHome')}
-                    />
+                    {loading ? (
+                            <ActivityIndicator size="large" color="black" style={{marginTop: 20}} />
+                        ) : (
+                            <MyButton
+                                // Muda o texto do botão conforme a etapa
+                                label={etapa === 1 ? "Próximo" : "Concluir Registro"} 
+                                fontSize={fontSizeForm}
+                                height={heightInput}
+                                // Se for etapa 1, vai pro proximo. Se for 2, chama o Supabase
+                                onPress={etapa === 1 ? handleProximo : handleConcluirRegistro}
+                            />
+                        )}
                 
                     {etapa === 1 && (
                     <View style={{flexDirection: "row", alignItems:'center', justifyContent: 'center'}}>

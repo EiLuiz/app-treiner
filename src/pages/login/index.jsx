@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, Text, View, Image, useWindowDimensions, TouchableOpacity, Pressable, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { StyleSheet, TextInput, Text, View, Image, useWindowDimensions, Alert, ActivityIndicator, TouchableOpacity, Pressable, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { Link } from "@react-navigation/native";
 import Logo from '../../assets/Logo.png'
 import { useState } from "react";
@@ -10,11 +10,45 @@ import styles from './styles'
 import MyInput from "../../components/MyInput";
 import { useResponsive } from "../../hooks/useResponsive";
 import MyButton from "../../components/MyButton";
+import { supabase } from '../../services/supabase';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const navigation = useNavigation();
+
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = async () => {
+        // 1. Validação simples
+        if (email === '' || senha === '') {
+            Alert.alert("Erro", "Por favor, preencha email e senha.");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            // 2. Chama o Supabase para logar
+            const { error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: senha,
+            });
+
+            if (error) throw error;
+
+            // 3. Se não deu erro, navega.
+            // Usamos .replace para que o usuário não consiga voltar para o Login apertando "Voltar"
+            navigation.replace('TreinerHome');
+
+        } catch (error) {
+            // Tratamento de erro (Senha errada ou usuário não existe)
+            Alert.alert("Falha no Login", "Email ou senha incorretos.");
+            console.log(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const {width, height} = useWindowDimensions();
     
@@ -49,8 +83,8 @@ const Login = () => {
                             placeholder="Insira seu email..."
                             fontSize={fontSizeForm}
                             height={heightInput}
-                            keyboardType="email-address" // Teclado de email
-                        />
+                            keyboardType="email-address"
+                            autoCapitalize="none" />
                         <MyInput 
                             label="Senha"
                             value={senha}
@@ -61,12 +95,16 @@ const Login = () => {
                             secureTextEntry={true} // Esconde a senha
                         />
                     </View>
-                    <MyButton
-                        label="Login"
-                        fontSize={fontSizeForm}
-                        height={heightInput}
-                        onPress={() => /*navigation.replace('TreinerHome')*/navigation.navigate('TreinerHome')}
-                    />
+                    {loading ? (
+                                <ActivityIndicator size="large" color="black" style={{ marginTop: 20 }} />
+                            ) : (
+                                <MyButton
+                                    label="Login" 
+                                    fontSize={fontSizeForm}
+                                    height={heightInput}
+                                    onPress={handleLogin} 
+                                />
+                            )}
                     <View style={{flexDirection: "row", alignItems:'center', justifyContent: 'center'}}>
                         <Text style = {{fontSize: fontSizeForm}}>Não tem uma conta? {''}
                             <Text style = {[styles.linkFooter, {fontSize: fontSizeForm}]} onPress={() => navigation.navigate('Signin')}>Registre-se...</Text>
