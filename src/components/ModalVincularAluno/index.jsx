@@ -8,7 +8,7 @@ import MyButton from '../MyButton';
 const ModalVincularAluno = ({
     visible,
     onClose,
-    onSucess
+    onSucesso
 }) => {
     const [emailAluno, setEmailAluno] = useState('');
     const [loading, setLoading] = useState(false);
@@ -39,15 +39,20 @@ const ModalVincularAluno = ({
                 return;
             }
 
-            const {error: eRro} = await supabase.from('profiles').update({professor_id: user.id}).eq('id', aluno.id);
+            const { error: erroUpdate } = await supabase
+                .from('profiles')
+                .update({ professor_id: user.id }) // <--- AQUI A MÁGICA: Coloca SEU ID na ficha dele
+                .eq('id', aluno.id);
 
-            if (eRro) throw eRro;
+           if (erroUpdate) throw erroUpdate
 
+            
             // Se chegou aqui, deu tudo certo!
             Alert.alert("Sucesso", "Aluno adicionado!");
-            setEmailAluno(''); // Limpa o campo
-            onSucesso(); // Avisa a tela de trás para atualizar a lista
-            onClose(); // Fecha o modal
+            setEmailAluno('');
+            onClose(); 
+            if (onSucesso) onSucesso();
+            
 
         } catch (error) {
             console.log(error);
@@ -55,7 +60,7 @@ const ModalVincularAluno = ({
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return(
     <Modal visible={visible} transparent={true} animationType='fade' onRequestClose={onClose}>
@@ -89,7 +94,7 @@ const ModalVincularAluno = ({
                     />
 
                     
-                    {loading ? <ActivityIndicator color="white"/> :<MyButton
+                    {loading ? <ActivityIndicator size="large" color="black" style={{ marginTop: 20 }}/> : <MyButton
                     label={'Adicionar'}
                     fontSize={fontSizeForm}
                     height={heightInput}

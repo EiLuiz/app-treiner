@@ -27,6 +27,11 @@ const AreaTreinador = () => {
     const fontSizeLogin = responsiveSize(36);
     const fontSizeForm = responsiveSize(20);
     const heightInput = responsiveSize(46);
+
+    const recarregarLista = () => {
+    console.log("Aqui vamos recarregar a lista de alunos...");
+    // futuramente: fetchAlunos();
+};
     return(
         <View style={styles.container}>
             <Header
@@ -37,7 +42,7 @@ const AreaTreinador = () => {
                 height={logoSize}
                 sizeFont={fontSizeForm}
             />
-            <ModalVincularAluno visible={modalVisivel} onClose={() => setModalVisivel(false)} />
+            <ModalVincularAluno visible={modalVisivel} onClose={() => setModalVisivel(false)} onSucesso={recarregarLista} />
             <View style = {styles.content}>
         <View style= {{alignItems:"center", justifyContent:'Center', margin:20}}>
         <Text style= {[styles.texto, {fontSize: fontSizeLogin }]}>Alunos</Text>
