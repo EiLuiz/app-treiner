@@ -17,105 +17,57 @@ const ClientCard = ({
     const heightInput = responsiveSize(46);
 
     return (
-      <View style={styles.card}>
-        <View style={styles.headerCard}>
-          <Text style={[styles.nameCard, {fontSize:fontSizeForm}]}>{name}</Text>
-          <View style={styles.labelIcon}>
-            <TouchableOpacity onPress={onPressDelete} style={styles.icon}> 
-              <FontAwesome5 name="trash-alt"  size={fontSizeForm} color="#FF3B30" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onPressEdit} style={styles.icon}> 
-              <FontAwesome5 name="pen" size={fontSizeForm} color="#4CD964" />
-            </TouchableOpacity>
-          </View>
-          </View>
-          <View style={styles.content}>
-            <TouchableOpacity onPress={onPressTreino} style={styles.buttonA}> 
-              <Text style={styles.textButtonA}>Treino</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onPressDieta} style={styles.buttonB}> 
-              <Text style={styles.textButtonB}>Dieta</Text>
-            </TouchableOpacity>
-          </View>
-        
+        <View style={styles.card}>
+            {/* Lado Esquerdo: Ícone e Nome */}
+            <View style={styles.infoContainer}>
+                <View style={styles.avatar}>
+                    <Text style={styles.avatarText}>{name.charAt(0).toUpperCase()}</Text>
+                </View>
+                <Text style={styles.name}>{name}</Text>
+            </View>
 
-      </View>
-    );}
+            {/* Lado Direito: Botões de Ação */}
+            <View style={styles.actions}>
+                <TouchableOpacity onPress={onPressTreino} style={styles.actionBtn}>
+                    <Text style={styles.btnText}>💪 Treino</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity onPress={onPressDieta} style={[styles.actionBtn, {backgroundColor: '#4CAF50'}]}>
+                    <Text style={styles.btnText}>🍎 Dieta</Text>
+                </TouchableOpacity> 
+                
+            </View>
+        </View>
+    );;}
 
     const styles = StyleSheet.create({
-      card:{
-        backgroundColor: '#EAEAEA', // O cinza claro do fundo
-        borderRadius: 25, // Bordas bem arredondadas
-        padding: 15,
-        marginBottom: 30,
-        width: '100%',
-        maxWidth: 500, // Trava para tablet
-        alignSelf: 'center',
-
-        // Sombra (Elevation para Android, Shadow para iOS)
-        elevation: 5,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      headerCard:{
-        flexDirection:'row',
-        alignItems: 'center',
-        justifyContent: 'space-beetwen',
-        marginBottom: 15,
-        paddingHorizontal: 5,
-      },
-      nameCard:{
-        flex: 1,
-      },
-      labelIcon:{
-        flexDirection: 'row',
-        gap: 10,
-      },
-      content:{
-        
-        paddingHorizontal: 5,
-      },
-      buttonA:{
-        
-        backgroundColor: 'black',
-        justifyContent:'center',
-        alignItems:'center',
-        paddingVertical: 10,
-        marginBottom: 10,
-        borderRadius: 13,
-
-        elevation: 5,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      textButtonA:{
-        color: 'white',
-        fontSize: 16,
-      },
-      buttonB:{
-        
+      card: {
         backgroundColor: 'white',
-        borderWidth:1,
-        justifyContent:'center',
-        alignItems:'center',
-        paddingVertical: 10,
+        padding: 15,
+        borderRadius: 12,
         marginBottom: 10,
-        borderRadius: 13,
-
-        elevation: 5,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        elevation: 3, // Sombra no Android
+        shadowColor: '#000', // Sombra no iOS
+        shadowOpacity: 0.1,
         shadowRadius: 4,
-      },
-      textButtonB:{
-        color: '#000',
-        fontSize: 16,
-      }
+    },
+    infoContainer: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+    avatar: {
+        width: 40, height: 40, borderRadius: 20,
+        backgroundColor: 'black', justifyContent: 'center', alignItems: 'center',
+        marginRight: 12
+    },
+    avatarText: { color: 'white', fontWeight: 'bold', fontSize: 18 },
+    name: { fontSize: 16, fontWeight: '600', color: '#333' },
+    actions: { flexDirection: 'row', gap: 5 },
+    actionBtn: {
+        paddingVertical: 6, paddingHorizontal: 12,
+        backgroundColor: 'black', borderRadius: 6
+    },
+    btnText: { color: 'white', fontSize: 12, fontWeight: 'bold' }
 
     })
 

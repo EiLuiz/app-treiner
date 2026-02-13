@@ -8,19 +8,21 @@ const MyInput = ({
     fontSize, 
     height, 
     secureTextEntry, 
-    keyboardType
+    keyboardType,
+    style,
+    labelStyle
 
 })=>{return(
     <View style = {styles.cardInput}>
-        <Text style = {[styles.textI, {fontSize: fontSize}]}>{label}</Text>
-        <TextInput style = {[styles.inputS, {fontSize: fontSize, height: height,}]} value={value} onChangeText={onChangeText} placeholder={placeholder} secureTextEntry={secureTextEntry} keyboardType={keyboardType} ></TextInput>
+        <Text style = {[styles.textI, {fontSize: fontSize}, labelStyle]}>{label}</Text>
+        <TextInput style = {[styles.inputS, {fontSize: fontSize, height: height, style}]} value={value} placeholderTextColor= '#ACACAC' onChangeText={onChangeText} placeholder={placeholder} secureTextEntry={secureTextEntry} keyboardType={keyboardType} ></TextInput>
     </View>
 );};
 
 
 const styles = StyleSheet.create({
     cardInput:{
-        flex: 1, 
+        
         width:'100%', 
         maxWidth: 500,
     },
@@ -33,7 +35,11 @@ const styles = StyleSheet.create({
         width: '100%',
         maxWidth: 500,
         padding: 10,
-        placeholderTextColor: '#ACACAC',
+        padding: 14,
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: '#E0E0E0',
+        marginBottom: 24,
         borderRadius: 13,
     },
 

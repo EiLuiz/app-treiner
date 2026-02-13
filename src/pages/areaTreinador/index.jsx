@@ -1,16 +1,20 @@
-import { StyleSheet, TextInput, Text, View, Image, useWindowDimensions, TouchableOpacity, Pressable, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { StyleSheet, TextInput, Text, View, Image, useWindowDimensions, TouchableOpacity,Pressable, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import styles from './styles'
+import { useState } from "react";
 import Header from "../../components/Header";
 import { useLayoutEffect } from 'react';
 import { useResponsive } from "../../hooks/useResponsive";
 import { useNavigation } from '@react-navigation/native';
 import ClientCard from "../../components/ClientCard";
 import MyButton from "../../components/MyButton";
+import ModalVincularAluno from "../../components/ModalVincularAluno";
 
 
 const AreaTreinador = () => {
     const { responsiveSize } = useResponsive();
     const navigation = useNavigation();
+
+    const [modalVisivel, setModalVisivel] = useState(false);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -33,17 +37,16 @@ const AreaTreinador = () => {
                 height={logoSize}
                 sizeFont={fontSizeForm}
             />
+            <ModalVincularAluno visible={modalVisivel} onClose={() => setModalVisivel(false)} />
             <View style = {styles.content}>
         <View style= {{alignItems:"center", justifyContent:'Center', margin:20}}>
         <Text style= {[styles.texto, {fontSize: fontSizeLogin }]}>Alunos</Text>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false} >
+        <ScrollView showsVerticalScrollIndicator={false} style={{padding:10}}>
         
         
         <ClientCard
         name='Luiz'
-        onPressDelete={() =>console.log("Apertei deletar!")}
-        onPressEdit={() =>console.log("Apertei editar!")}
         onPressDieta={() =>console.log("Apertei Dieta!")}
         onPressTreino={() =>console.log("Apertei Treino!")}
         />
@@ -56,7 +59,7 @@ const AreaTreinador = () => {
             label='+'
             fontSize= {fontSizeForm} 
             height={heightInput}
-            onPress={()=>console.log('Add novo aluno')}
+            onPress={()=>setModalVisivel(true)}
             />
         </View>
 

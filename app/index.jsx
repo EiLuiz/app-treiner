@@ -1,11 +1,15 @@
 import { StyleSheet, Text, View, Image } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import Login from '../src/pages/login'
 import Routes from "../src/routes";
 
 const App = () => {
     return(
-        
-      <Routes />
+    <>
+    <StatusBar/>
+    <Routes />
+    </>
+      
     )
 }
 

@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, Text, View, Image, useWindowDimensions, Alert, ActivityIndicator, TouchableOpacity, Pressable, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { StyleSheet, TextInput, Text, View, Image, Keyboard, useWindowDimensions, TouchableWithoutFeedback, Alert, ActivityIndicator, TouchableOpacity, Pressable, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { Link } from "@react-navigation/native";
 import Logo from '../../assets/Logo.png'
 import { useState } from "react";
@@ -61,7 +61,11 @@ const Login = () => {
     const fontSizeForm = responsiveSize(20);
     const heightInput = responsiveSize(46);
     return (
-    
+        <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20} 
+            >
         <View style = {styles.container}>
             <View style = {styles.header}>
                 <Image source = {Logo} resizeMode='contain' style = {[styles.logo, { width: logoSize, height: logoSize }]} />
@@ -69,10 +73,17 @@ const Login = () => {
                 </Text>
                 <Text style = {[styles.subtitle, { fontSize: fontSizeBemVindo }]}>Seja bem-vindo!</Text>
             </View>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            
             <View style = {styles.content}>
+                <ScrollView 
+                contentContainerStyle={{ flexGrow: 1 }} 
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+            >
                 <View style = {{gap: 50, flex: 1, paddingBottom: 30}}>
                     <View style = {{ alignItems:'center' }}>
-                        <Text style = {[styles.texto, {fontSize: fontSizeLogin }]}>Login</Text>
+                        <Text style = {{fontSize: fontSizeLogin }}>Login</Text>
                     </View>
                     
                     <View style = {styles.form}>
@@ -113,9 +124,13 @@ const Login = () => {
                     
 
                 </View>
+                </ScrollView>
             </View>
             
+            </TouchableWithoutFeedback>
+            
         </View>
+        </KeyboardAvoidingView>
     )
 }
 

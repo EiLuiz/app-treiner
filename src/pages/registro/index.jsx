@@ -1,4 +1,5 @@
-import { Text, View, TextInput, Image, useWindowDimensions, TouchableOpacity, Alert, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform, FlatList } from "react-native";
+import { Text, View, TextInput, Image, useWindowDimensions, TouchableOpacity,  Alert, ActivityIndicator, ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback, // <--- Importante para fechar o teclado
+    Keyboard, Platform, FlatList } from "react-native";
 import Logo from '../../assets/Logo.png';
 import { useState } from "react";
 import { useNavigation } from '@react-navigation/native';
@@ -14,7 +15,6 @@ import { supabase } from '../../services/supabase';
 
 const Registro = () =>{
     const [nome, setNome] = useState('');
-    const [cpf, setCpf] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [senhaAgain, setSenhaAgain] = useState('');
@@ -44,7 +44,7 @@ const Registro = () =>{
         }
     };
     const handleProximo = () => {
-        if (nome === '' || email === ''|| cpf === '') {
+        if (nome === '' || email === '') {
             Alert.alert("Atenção", "Preencha os campos antes de continuar.");
             return;
         }
@@ -86,8 +86,8 @@ const Registro = () =>{
                     { 
                         id: authData.user.id,
                         nome: nome,
-                        cpf: cpf,
-                        funcao: funcao
+                        funcao: funcao,
+                        email: email
                     }
                 ]);
 
@@ -97,7 +97,7 @@ const Registro = () =>{
             }
 
             Alert.alert("Sucesso", "Conta criada com sucesso!", [
-                { text: "OK", onPress: () => navigation.navigate('TreinerHome') }
+                { text: "OK", onPress: () => navigation.navigate('Login') }
             ]);
 
         } catch (error) {
@@ -107,7 +107,11 @@ const Registro = () =>{
         }
     }
     return (
-        
+        <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // 'height' costuma funcionar melhor no Android
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20} // Ajuste fino
+            >
         <View style = {styles.container}>
             <Header
             
@@ -117,12 +121,15 @@ const Registro = () =>{
             height={logoSize}
             
             />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             
-            <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                >
+            
             <View style = {styles.content}>
+                <ScrollView 
+                        contentContainerStyle={{ flexGrow: 1 }} 
+                        showsVerticalScrollIndicator={false}
+                        keyboardShouldPersistTaps="handled" // Permite clicar nos botões mesmo com teclado aberto
+            >
                 <View style = {{gap: 50, flex:1, paddingBottom: 30}}>
                     <View style = {{ alignItems:'center' }}>
                         <Text style = {[styles.texto, {fontSize: fontSizeLogin }]}>{etapa === 1 ? "Dados Pessoais" : "Segurança"}</Text>
@@ -131,7 +138,7 @@ const Registro = () =>{
                             <View style={{width: 10, height: 10, borderRadius: 5, backgroundColor: etapa === 2 ? 'black' : '#ccc'}} />
                         </View>
                     </View>
-
+            
 
                     <View style = {styles.form}>
                         {etapa === 1 && (
@@ -144,17 +151,6 @@ const Registro = () =>{
                                 fontSize={fontSizeForm}
                                 height={heightInput}
                             />
-
-                            
-                        <MyInput 
-                            label="CPF"
-                            value={cpf}
-                            onChangeText={setCpf}
-                            placeholder="Insira seu cpf..."
-                            fontSize={fontSizeForm}
-                            height={heightInput}
-                            keyboardType="numeric" // Teclado numérico
-                        />
                         <MyInput 
                             label="Email"
                             value={email}
@@ -248,10 +244,14 @@ const Registro = () =>{
                     
 
                 </View>
+                </ScrollView>
             </View>
-            </KeyboardAvoidingView>
+            
+            </TouchableWithoutFeedback>
+            
             
         </View>
+        </KeyboardAvoidingView>
     )
 }
 

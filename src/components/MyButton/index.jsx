@@ -7,12 +7,13 @@ const MyButton = ({
     fontSize, 
     height,
     onPress,
-    style
+    style,
+    styleText,
 
 })=>{return(
     <View>
     <TouchableOpacity onPress={onPress} style = {[styles.button, {height: height,}, style ]}>
-        <Text style = {[styles.textButton, {fontSize: fontSize}]}>{label}</Text>
+        <Text style = {[styles.textButton, {fontSize: fontSize}, styleText]}>{label}</Text>
     </TouchableOpacity>
     </View>
 );};
