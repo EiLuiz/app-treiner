@@ -74,9 +74,9 @@ const styles = StyleSheet.create({
     },
     content: {
         alignSelf: 'center',
-        paddingTop: 30,
+        paddingTop: 20,
         flex: 1,
-        paddingHorizontal: 40,
+        paddingHorizontal: 20,
         backgroundColor: '#fff',
         borderTopLeftRadius: 70,
         borderTopRightRadius: 70,
