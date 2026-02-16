@@ -1,13 +1,17 @@
-import { StyleSheet, TextInput, Text, View, Image, useWindowDimensions, FlatList, TouchableOpacity,Pressable, ScrollView, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import { Text, View, FlatList, Alert } from "react-native";
 import styles from './styles'
+
 import { useState, useCallback } from "react";
-import Header from "../../components/Header";
 import { useLayoutEffect } from 'react';
 import { useResponsive } from "../../hooks/useResponsive";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
+import Header from "../../components/Header";
 import ClientCard from "../../components/ClientCard";
 import MyButton from "../../components/MyButton";
 import ModalVincularAluno from "../../components/ModalVincularAluno";
+import InputSearch from "../../components/InputSearch";
+
 import { supabase } from "../../services/supabase";
 
 
@@ -18,12 +22,15 @@ const AreaTreinador = () => {
     const [modalVisivel, setModalVisivel] = useState(false); 
     const [loading, setLoading] = useState(false);
     const [alunos, setAlunos] = useState([]);
+    const [search, setSearch] = useState('');
 
     useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false, // Esconde o header padrão para você usar o seu personalizado
         });
     }, [navigation]);
+    const listaFiltrada = alunos.filter(aluno =>
+    aluno.nome?.toLowerCase().includes(search.toLowerCase()));
     
         // Aplicando as medidas exatas que você passou:
     const logoSize = responsiveSize(30); 
@@ -63,21 +70,17 @@ const AreaTreinador = () => {
         <View style={styles.container}>
             <Header
                 label= "Área do treinador"
-                
-                logoSize={logoSize}
-                width={logoSize}
-                height={logoSize}
-                sizeFont={fontSizeForm}
             />
             <ModalVincularAluno visible={modalVisivel} onClose={() => setModalVisivel(false)} onSucesso={fetchAlunos} />
             <View style = {styles.content}>
-        <View style= {{alignItems:"center", justifyContent:'Center', margin:20}}>
-        <Text style= {[styles.texto, {fontSize: fontSizeLogin }]}>Alunos</Text>
+        <View style= {{alignItems:"center", marginVertical:30, marginHorizontal:5, flexDirection: 'row', justifyContent: 'space-between',}}>
+        <Text style= {{fontSize: fontSizeLogin }}>Alunos</Text> 
+        <InputSearch placeholder="Pesquisar aluno..." value={search} onChangeText={setSearch}/>
         </View>
 
         {loading ? <ActivityIndicator size="large" color="black" style={{ marginTop: 20 }}/> : <FlatList 
 
-            data = {alunos}
+            data = {listaFiltrada}
             keyExtractor={(item)=>item.id}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{padding: 5, paddingTop: 10}}
@@ -86,7 +89,10 @@ const AreaTreinador = () => {
                 return (<ClientCard
                 name={item.nome}
                 onPressDieta={() =>console.log("Apertei Dieta!")}
-                onPressTreino={() =>console.log("Apertei Treino!")}
+                onPressTreino={() => navigation.navigate('TreinosAluno', { 
+                                alunoId: item.id,
+                                alunoNome: item.nome  
+                            })}
                 />   )
             }}                 
         />}

@@ -13,8 +13,8 @@ import MyButton from "../../components/MyButton";
 import { supabase } from '../../services/supabase';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
+    const [email, setEmail] = useState('teste@gmail.com');
+    const [senha, setSenha] = useState('123456');
     const navigation = useNavigation();
 
     const [loading, setLoading] = useState(false);

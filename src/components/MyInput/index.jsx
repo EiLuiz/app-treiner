@@ -9,13 +9,14 @@ const MyInput = ({
     height, 
     secureTextEntry, 
     keyboardType,
-    style,
-    labelStyle
+    labelStyle,
+    style
 
 })=>{return(
-    <View style = {styles.cardInput}>
-        <Text style = {[styles.textI, {fontSize: fontSize}, labelStyle]}>{label}</Text>
-        <TextInput style = {[styles.inputS, {fontSize: fontSize, height: height, style}]} value={value} placeholderTextColor= '#ACACAC' onChangeText={onChangeText} placeholder={placeholder} secureTextEntry={secureTextEntry} keyboardType={keyboardType} ></TextInput>
+    <View style = {[styles.cardInput, style]}>
+        {label ? <><Text style = {[styles.textI, {fontSize: fontSize}, labelStyle]}>{label}</Text>
+        <TextInput style = {[styles.inputS, {fontSize: fontSize, height: height}]} value={value} placeholderTextColor= '#ACACAC' onChangeText={onChangeText} placeholder={placeholder} secureTextEntry={secureTextEntry} keyboardType={keyboardType} ></TextInput></>
+        :<TextInput style = {[styles.inputS, {fontSize: fontSize, height: height}]} value={value} placeholderTextColor= '#ACACAC' onChangeText={onChangeText} placeholder={placeholder} secureTextEntry={secureTextEntry} keyboardType={keyboardType} ></TextInput> }
     </View>
 );};
 
@@ -23,7 +24,7 @@ const MyInput = ({
 const styles = StyleSheet.create({
     cardInput:{
         
-        width:'100%', 
+        width: "100%",
         maxWidth: 500,
     },
     textI:{

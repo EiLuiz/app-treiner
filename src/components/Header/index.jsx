@@ -1,15 +1,18 @@
 import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Logo from '../../assets/Logo.png';
+import { useResponsive } from "../../hooks/useResponsive";
 
 const Header = ({
     label,
     onPress,
-    logoSize,
-    width,
-    height,
-    sizeFont
-}) =>{ return(
+}) =>{ 
+    const { responsiveSize } = useResponsive();
+    const logoSize = responsiveSize(30); 
+    const fontSizeLogin = responsiveSize(36);
+    const fontSizeForm = responsiveSize(20);
+    const heightInput = responsiveSize(46); 
+    return(
     <View style = {styles.header}>
         {onPress ? (
                 <TouchableOpacity onPress={onPress}>
@@ -19,8 +22,8 @@ const Header = ({
                 // View vazia do mesmo tamanho para manter o alinhamento
                 <View style={{ width: logoSize, height: logoSize }} />
             )}
-        <Text style={[styles.text, {fontSize: sizeFont}]}>{label}</Text>
-        <Image source = {Logo} resizeMode='contain' style = {{ width: width, height: height }} />
+        <Text style={[styles.text, {fontSize: fontSizeForm}]}>{label}</Text>
+        <Image source = {Logo} resizeMode='contain' style = {{ width: logoSize, height: logoSize }} />
     </View>
 )}
 
