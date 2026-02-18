@@ -70,7 +70,14 @@ const ModalCriarTreino = ({
     const handleRemoverExercicio = (id_provisorio) =>{
         setListaExercicios(listaExercicios.filter(item => item.id !== id_provisorio ));
     };
+    const handleChangeDadosSerie = (index,campo,valor) => {
+        const novoArray = [...dadosEx];
 
+        novoArray[index] = {...novoArray[index], [campo]: valor};
+        setDadosEx(novoArray);
+    };
+
+    
     const handleAddTudo = async () => {
         if(!nomeTreino) return;
         setLoading(true);
@@ -190,7 +197,7 @@ const ModalCriarTreino = ({
                     <MyInput
                     style={{width:100}}
                     value={serie.reps}
-                    onChangeText={setRepsEx}
+                    onChangeText={(t)=> handleChangeDadosSerie(index, 'reps', t)}
                     placeholder="Reps"
                     fontSize={fontSizeForm}
                     keyboardType="numeric"
@@ -200,7 +207,7 @@ const ModalCriarTreino = ({
                     <MyInput
                     style={{width:100}}
                     value={serie.carga}
-                    onChangeText={setCargaEx}
+                    onChangeText={(t)=> handleChangeDadosSerie(index, 'carga', t)}
                     placeholder="Kg"
                     keyboardType="numeric"
                     fontSize={fontSizeForm}
