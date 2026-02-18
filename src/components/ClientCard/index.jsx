@@ -18,12 +18,11 @@ const ClientCard = ({
 
     return (
         <View style={styles.card}>
-            {/* Lado Esquerdo: Ícone e Nome */}
             <View style={styles.infoContainer}>
                 <View style={styles.avatar}>
                     <Text style={styles.avatarText}>{name.charAt(0).toUpperCase()}</Text>
                 </View>
-                <Text style={styles.name}>{name}</Text>
+                <Text style={styles.name}>{name.split(' ')[0]}</Text>
             </View>
 
             {/* Lado Direito: Botões de Ação */}
@@ -49,6 +48,7 @@ const ClientCard = ({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+
         elevation: 3, // Sombra no Android
         shadowColor: '#000', // Sombra no iOS
         shadowOpacity: 0.1,

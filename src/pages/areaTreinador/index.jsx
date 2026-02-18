@@ -1,4 +1,4 @@
-import { Text, View, FlatList, Alert } from "react-native";
+import { Text, View, FlatList, Alert, ActivityIndicator } from "react-native";
 import styles from './styles'
 
 import { useState, useCallback } from "react";
@@ -26,7 +26,7 @@ const AreaTreinador = () => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerShown: false, // Esconde o header padrão para você usar o seu personalizado
+            headerShown: false,
         });
     }, [navigation]);
     const listaFiltrada = alunos.filter(aluno =>
@@ -39,6 +39,7 @@ const AreaTreinador = () => {
     const heightInput = responsiveSize(46);
 
     const fetchAlunos = async () => {
+        setLoading(true)
         try {
             const {data: {user}} = await supabase.auth.getUser();
             if(!user) return
@@ -52,8 +53,9 @@ const AreaTreinador = () => {
 
         } catch (error) {
             console.log("erro em carregar lista", error.message);
+            setLoading(false);
         }finally{
-            setLoading(false)
+            setLoading(false);
         }
     }
 
@@ -64,7 +66,6 @@ const AreaTreinador = () => {
             ()=>{fetchAlunos()}, []
         )
     );
-    // futuramente: fetchAlunos();
 
     return(
         <View style={styles.container}>
@@ -74,11 +75,11 @@ const AreaTreinador = () => {
             <ModalVincularAluno visible={modalVisivel} onClose={() => setModalVisivel(false)} onSucesso={fetchAlunos} />
             <View style = {styles.content}>
         <View style= {{alignItems:"center", marginVertical:30, marginHorizontal:5, flexDirection: 'row', justifyContent: 'space-between',}}>
-        <Text style= {{fontSize: fontSizeLogin }}>Alunos</Text> 
+        <Text style= {{fontSize: 30, fontWeight:"bold" }}>Alunos</Text> 
         <InputSearch placeholder="Pesquisar aluno..." value={search} onChangeText={setSearch}/>
         </View>
 
-        {loading ? <ActivityIndicator size="large" color="black" style={{ marginTop: 20 }}/> : <FlatList 
+        {loading ? <ActivityIndicator size="large" color="black" style={{ marginTop: 20, flex:1 }}/> : <FlatList 
 
             data = {listaFiltrada}
             keyExtractor={(item)=>item.id}

@@ -19,8 +19,7 @@ const ModalCriarTreino = ({
 
     const [nomeEx, setNomeEx] = useState('');
     const [serieEx, setSerieEx] = useState('');
-    const [repsEx, setRepsEx] = useState('');
-    const [cargaEx, setCargaEx] = useState('');
+    const [dadosEx, setDadosEx] = useState([]);
 
     const [loading, setLoading] = useState(false);
     const { responsiveSize } = useResponsive();
@@ -28,6 +27,25 @@ const ModalCriarTreino = ({
     const fontSizeLogin = responsiveSize(36);
     const fontSizeForm = responsiveSize(20);
     const heightInput = responsiveSize(46);
+
+    const handleChangeSeries = (texto) => {
+        setSerieEx(texto);
+        const numero = parseInt(texto);
+
+        if(numero > 0){
+            setDadosEx(
+                (prev) => {
+                    const novoArray = Array.from({ length: numero }, (_, i) => {
+                        return prev[i] || { reps: '', carga: '' }; 
+                    });
+                    return novoArray;
+                }
+            
+            )
+        }else{
+            setDadosEx([]);
+        }
+    }
 
     const handleAddExercicios = () => {
         if(!nomeEx || !serieEx || !repsEx){
@@ -144,38 +162,54 @@ const ModalCriarTreino = ({
                 height={heightInput}
                 placeholderTextColor="#999"
                 />
-                <View style={{flexDirection:"row",justifyContent: 'space-between'}}>
                 <MyInput
-                style={{width:100}}
                 value={serieEx}
-                onChangeText={setSerieEx}
+                onChangeText={handleChangeSeries}
                 keyboardType="numeric"
-                placeholder="Séries"
+                placeholder="Número de séries"
                 fontSize={fontSizeForm}
                 height={heightInput}
                 placeholderTextColor="#999"
                 />
-                <MyInput
-                style={{width:100}}
-                value={repsEx}
-                onChangeText={setRepsEx}
-                placeholder="Reps"
-                fontSize={fontSizeForm}
-                keyboardType="numeric"
-                height={heightInput}
-                placeholderTextColor="#999"
-                />
-                <MyInput
-                style={{width:100}}
-                value={cargaEx}
-                onChangeText={setCargaEx}
-                placeholder="Kg"
-                keyboardType="numeric"
-                fontSize={fontSizeForm}
-                height={heightInput}
-                placeholderTextColor="#999"
-                />
-                </View>
+                {dadosEx.map((serie, index) => (
+                    <View key={index} style={{flexDirection:"row",justifyContent: 'space-between'}}>
+                    <View style={{
+                        backgroundColor: '#EAEAEA',
+                        width: 100,
+                        maxWidth: 500,
+                        padding: 10,
+                        height: heightInput,
+                        borderWidth: 1,
+                        borderColor: '#E0E0E0',
+                        marginBottom: 24,
+                        borderRadius: 13,
+                                }}>
+                        <Text style={{fontSize: fontSizeForm, color:'#ACACAC'}}>{index+1}º </Text>
+                    </View>
+                    
+                    <MyInput
+                    style={{width:100}}
+                    value={serie.reps}
+                    onChangeText={setRepsEx}
+                    placeholder="Reps"
+                    fontSize={fontSizeForm}
+                    keyboardType="numeric"
+                    height={heightInput}
+                    placeholderTextColor="#999"
+                    />
+                    <MyInput
+                    style={{width:100}}
+                    value={serie.carga}
+                    onChangeText={setCargaEx}
+                    placeholder="Kg"
+                    keyboardType="numeric"
+                    fontSize={fontSizeForm}
+                    height={heightInput}
+                    placeholderTextColor="#999"
+                    />
+                    </View>
+                ))}
+                
                 
                 <MyButton
                     style={styles.btnCancelar}
