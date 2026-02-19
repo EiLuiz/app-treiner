@@ -1,15 +1,18 @@
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 const TreinoCard = ({
     name,
-    desc
+    desc,
+    onPress
 })=>{
     return(
+        <TouchableOpacity onPress={onPress}>
         <View style={styles.card}>
             <Text style={styles.tittle}>{name}</Text>
             
             <Text style={styles.desc}>{desc}</Text>
         </View>
+        </TouchableOpacity>
     )
 }
 

@@ -85,6 +85,9 @@ const AlunoTreino = () => {
                 keyExtractor={(item)=>item.id}
                 renderItem={({item})=>
                 <TreinoCard
+                onPress={() => navigation.navigate('Treinos', { 
+                                treinoId: item.id,
+                            })}
                 name={item.nome}
                 desc={item.descricao}
                 />

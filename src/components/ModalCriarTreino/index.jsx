@@ -48,7 +48,7 @@ const ModalCriarTreino = ({
     }
 
     const handleAddExercicios = () => {
-        if(!nomeEx || !serieEx || !repsEx){
+        if(!nomeEx || !serieEx || !dadosEx.length){
             Alert.alert("Erro!", "Você precisa preencher os dados do exercicio!");
             return;
         }
@@ -56,15 +56,13 @@ const ModalCriarTreino = ({
             id: Date.now(),
             nome: nomeEx,
             series: serieEx,
-            reps: repsEx,
-            carga: cargaEx || '0',
+            detalhes: dadosEx
         };
 
         setListaExercicios([...listaExercicios, novoExercicio]);
         setNomeEx('');
         setSerieEx('');
-        setCargaEx('');
-        setRepsEx('');
+        setDadosEx([])
 
     };
     const handleRemoverExercicio = (id_provisorio) =>{
@@ -72,7 +70,6 @@ const ModalCriarTreino = ({
     };
     const handleChangeDadosSerie = (index,campo,valor) => {
         const novoArray = [...dadosEx];
-
         novoArray[index] = {...novoArray[index], [campo]: valor};
         setDadosEx(novoArray);
     };
@@ -96,8 +93,7 @@ const ModalCriarTreino = ({
             const exerciciosNovoTreino = listaExercicios.map(item=>({
                 nome: item.nome,
                 series: item.series,
-                carga: item.carga,
-                reps: item.reps,
+                series_detalhes: item.detalhes,
                 treino_id: idNovoTreino
             }));
             const {error: erroEx} = await supabase.from('exercicios').insert(exerciciosNovoTreino);
@@ -108,6 +104,7 @@ const ModalCriarTreino = ({
             setNomeTreino('');
             setDescTreino('');
             setListaExercicios([]);
+            setDadosEx([]);
             onClose(); 
             if (onSucesso) onSucesso();
             
@@ -124,7 +121,7 @@ const ModalCriarTreino = ({
     <Modal visible={visible} transparent={true} animationType='fade' onRequestClose={onClose}>
         <View style={styles.fundoPreto}> 
             <View style={styles.contentCard}>
-                <View style={styles.header}><Text style={styles.titulo}>Novo treino</Text><TouchableOpacity onPress={onClose}><Text style={styles.buttonClose}>X</Text></TouchableOpacity></View>
+                <View style={styles.header}><Text style={styles.titulo}>Novo treino</Text><TouchableOpacity style={{paddingHorizontal:20}}onPress={onClose}><Text style={styles.buttonClose}>X</Text></TouchableOpacity></View>
                 <ScrollView>
                 <Text style={styles.subtitulo}>Dados sobre o treino:</Text>
                 <MyInput
@@ -152,7 +149,7 @@ const ModalCriarTreino = ({
                         <View key={item.id} style={styles.cardExercicio}>
                             <View style={{flex:1}}>
                                 <Text style={styles.cardTitle}>{item.nome}</Text>
-                                <Text style={styles.cardDesc}>{item.series} séries x {item.reps} reps ({item.carga}kg)</Text>
+                                <Text style={styles.cardDesc}>{item.series} séries</Text>
                             </View>
                                 
                         </View>
@@ -220,7 +217,7 @@ const ModalCriarTreino = ({
                 
                 <MyButton
                     style={styles.btnCancelar}
-                    label={'+'}
+                    label={'Salvar exercício'}
                     fontSize={fontSizeForm}
                     height={heightInput}
                     styleText={styles.textoCancelar}
@@ -306,7 +303,8 @@ const styles = StyleSheet.create({
     },
     
     btnCancelar: {
-        width: 60,
+        width: 'auto',
+        padding:10,
         marginBottom: 30,
         borderWidth: 1,
         borderColor: '#DDD',
