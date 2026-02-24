@@ -4,6 +4,7 @@ import registro from "../pages/registro";
 import AreaTreinador from "../pages/areaTreinador";
 import AlunoTreino from "../pages/alunoTreino";
 import Treinos from "../pages/treinos";
+import AlunoDieta from "../pages/alunoDieta";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ export default function Routes(){
             <Stack.Screen name='TreinerHome'   component={AreaTreinador}/>
             <Stack.Screen name='TreinosAluno'  component={AlunoTreino}/>
             <Stack.Screen name='Treinos' component={Treinos} />
+            <Stack.Screen name='DietasAluno' component={AlunoDieta} />
         </Stack.Navigator>
         
     )

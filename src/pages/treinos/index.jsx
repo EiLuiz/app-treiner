@@ -5,6 +5,9 @@ import { useState, useCallback, useLayoutEffect } from "react";
 import Header from "../../components/Header";
 import { supabase } from "../../services/supabase";
 import InputSearch from "../../components/InputSearch";
+import ExerciciosCard from "../../components/ExerciciosCard";
+import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const Treinos = () => {
     const route = useRoute();
@@ -13,7 +16,25 @@ const Treinos = () => {
     const [loading, setLoading] = useState(false);
     const [exercicios, setExercicios] = useState([]);
     const navigation = useNavigation(); 
-    const [search,setSearch] = useState({});
+    const [search,setSearch] = useState('');
+    
+
+    const handleRemoverExercicio = async (id_item) =>{
+        try {
+            const { error } = await supabase.from('exercicios').delete().eq('id', id_item);
+
+            if(error) throw error;
+            
+        } catch (error) {
+            Alert.alert('error', 'error');
+            console.log(error)
+            
+        }finally{
+            Alert.alert('Excluido!', 'Item Excluido!');
+            fetchExercicios();
+        }
+    }
+
     const fetchExercicios = async () =>{
         setLoading(true);
         try {
@@ -74,15 +95,16 @@ const Treinos = () => {
                 data= {listaFiltrada}
                 keyExtractor={(item)=>item.id}
                 renderItem={({item})=>
-                    <View></View>
-                /*<TreinoCard
-                onPress={() => navigation.navigate('Treinos', { 
-                                treinoId: item.id,
-                            })}
-                name={item.nome}
-                desc={item.descricao} 
-                />*/
+                    <View>
+                        <ExerciciosCard
+                        dados = {item}
+                        close = {()=>handleRemoverExercicio(item.id)}
+                        
+                        />
+                    </View>
                 }
+                ListEmptyComponent={()=> 
+                                <View style={{alignItems:'center', justifyContent:'center', marginTop:30, gap:20,}}><MaterialCommunityIcons name="dumbbell" size={100} color="#c9c8c8" /><Text style={{fontSize:20, color:"#c9c8c8"}}>O aluno não possui exercicios adicionados</Text></View>}
                 
                 />}
             </View>

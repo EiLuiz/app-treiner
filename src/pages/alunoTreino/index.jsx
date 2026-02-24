@@ -4,6 +4,7 @@ import styles from '../areaTreinador/styles'
 import { useState, useCallback, useLayoutEffect } from "react";
 import { useResponsive } from "../../hooks/useResponsive";
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import Header from "../../components/Header";
 import ClientCard from "../../components/ClientCard";
@@ -36,6 +37,19 @@ const AlunoTreino = () => {
         });
     }, [navigation]);
     
+    const handleRemoverExercicio = async (id_item) =>{
+        try{
+            const {error} = await supabase.from('treinos').delete().eq('id', id_item);
+            if(error) throw error
+        }catch(error){
+            console.log(error)
+            Alert.alert('Erro','Erro em apagar treino!')
+        }finally{
+            fetchTreinos();
+            Alert.alert('Excluído', 'Item deletado!')
+        }
+
+    }
     
     const fetchTreinos = async () =>{
         setLoading(true);
@@ -72,7 +86,7 @@ const AlunoTreino = () => {
             visible={modalVisivel}
             alunoId={alunoId}
             onClose={()=>setModalVisivel(false)}
-            onSucesso={()=>console.log("Deun tuddadada")}
+            onSucesso={()=>fetchTreinos()}
             />
             <View style = {styles.content}>
                 <View style= {{alignItems:"center", marginVertical:30, marginHorizontal:5, flexDirection: 'row', justifyContent: 'space-between',}}>
@@ -90,8 +104,11 @@ const AlunoTreino = () => {
                             })}
                 name={item.nome}
                 desc={item.descricao}
+                close={()=>handleRemoverExercicio(item.id)}
                 />
                 }
+                ListEmptyComponent={()=> 
+                <View style={{alignItems:'center', justifyContent:'center', marginTop:30, gap:20,}}><MaterialCommunityIcons name="dumbbell" size={100} color="#c9c8c8" /><Text style={{fontSize:20, color:"#c9c8c8"}}>O aluno não possui treinos adicionados</Text></View>}
                 
                 />}
 

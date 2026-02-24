@@ -1,14 +1,16 @@
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const TreinoCard = ({
     name,
     desc,
-    onPress
+    onPress,
+    close
 })=>{
     return(
         <TouchableOpacity onPress={onPress}>
         <View style={styles.card}>
-            <Text style={styles.tittle}>{name}</Text>
+           <View style={{flexDirection:'row', justifyContent:'space-between', width:'100%'}}><Text style={styles.tittle}>{name}</Text><TouchableOpacity onPress={close}><AntDesign name="close-circle" size={20} color="red" /></TouchableOpacity></View> 
             
             <Text style={styles.desc}>{desc}</Text>
         </View>

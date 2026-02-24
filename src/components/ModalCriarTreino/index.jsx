@@ -4,6 +4,7 @@ import { supabase } from '../../services/supabase'; // Ajuste o caminho se neces
 import MyInput from '../MyInput';
 import { useResponsive } from '../../hooks/useResponsive';
 import MyButton from '../MyButton';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const ModalCriarTreino = ({
     visible,
@@ -121,7 +122,14 @@ const ModalCriarTreino = ({
     <Modal visible={visible} transparent={true} animationType='fade' onRequestClose={onClose}>
         <View style={styles.fundoPreto}> 
             <View style={styles.contentCard}>
-                <View style={styles.header}><Text style={styles.titulo}>Novo treino</Text><TouchableOpacity style={{paddingHorizontal:20}}onPress={onClose}><Text style={styles.buttonClose}>X</Text></TouchableOpacity></View>
+                <View style={styles.header}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', width:'100%'}}>
+                        <Text style={styles.titulo}>Novo treino</Text>
+                        <TouchableOpacity onPress={onClose}>
+                            <AntDesign name="close-circle" size={20} color="red" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
                 <ScrollView>
                 <Text style={styles.subtitulo}>Dados sobre o treino:</Text>
                 <MyInput
@@ -148,7 +156,12 @@ const ModalCriarTreino = ({
                     (item)=>(
                         <View key={item.id} style={styles.cardExercicio}>
                             <View style={{flex:1}}>
-                                <Text style={styles.cardTitle}>{item.nome}</Text>
+                                <View style={{flexDirection:'row', justifyContent:'space-between', width:'100%'}}>
+                                    <Text style={styles.cardTitle}>{item.nome}</Text> 
+                                    <TouchableOpacity onPress={()=>handleRemoverExercicio(item.id)}>
+                                        <AntDesign name="close-circle" size={20} color="red" />
+                                    </TouchableOpacity>
+                                </View>
                                 <Text style={styles.cardDesc}>{item.series} séries</Text>
                             </View>
                                 

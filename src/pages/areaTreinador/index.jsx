@@ -89,7 +89,10 @@ const AreaTreinador = () => {
 
                 return (<ClientCard
                 name={item.nome}
-                onPressDieta={() =>console.log("Apertei Dieta!")}
+                onPressDieta={() =>navigation.navigate('DietasAluno', { 
+                                alunoId: item.id,
+                                alunoNome: item.nome  
+                            })}
                 onPressTreino={() => navigation.navigate('TreinosAluno', { 
                                 alunoId: item.id,
                                 alunoNome: item.nome  
